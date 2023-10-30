@@ -15,7 +15,7 @@ private:
     std::vector<int> registers;
 
 public:
-    HyperLogLog(int precision);
+    HyperLogLog(int precision = 14);
     void insert(const std::string& kmer);
     double estimateCardinality();
     void merge(const HyperLogLog& other);

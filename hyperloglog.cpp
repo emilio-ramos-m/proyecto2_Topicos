@@ -13,20 +13,18 @@ HyperLogLog::HyperLogLog(int precision) {
 }
 
 void HyperLogLog::insert(const std::string& kmer) {
-    // Calcular el hash de kmer
     uint32_t hash;
     MurmurHash3_x86_32(kmer.c_str(), kmer.size(), 0, &hash);
-    int hashValue = hash%M;
-    
-    //Encontrar el primer 1 a partir de la izquierda
-    int r = 1; 
-    while ((hashValue & 1) == 0 && r <= 32) {
-        r++;
-        hashValue >>= 1;
+    unsigned int p = hash >> (32 - precision);
+    unsigned int b = hash << precision;
+   
+    int w = 1;
+    int aux = 1 << precision;
+    while ((b & aux) == 0 && aux != 0) {
+        w++;
+        aux >>= 1;
     }
-    
-    // Actualizar el registro
-    registers[hashValue] = std::max(registers[hashValue], r);
+    registers[p] = std::max(registers[p], w);
 }
 
 double HyperLogLog::estimateCardinality() {
