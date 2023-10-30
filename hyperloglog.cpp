@@ -54,3 +54,33 @@ void HyperLogLog::merge(const HyperLogLog& other) {
         registers[i] = std::max(registers[i], other.registers[i]);
     }
 }
+
+/*
+
+sdsl::wt_huff<sdsl::csa_wt<sdsl::wt_huff<>>> compress_wt_huff() {
+        // Representar 'registers' como una cadena de bits
+        sdsl::bit_vector bv(M, 0);
+        for (int i = 0; i < M; ++i) {
+            bv[i] = (registers[i] != 0);
+        }
+
+        // Crear estructuras de datos de sdsl-lite
+        sdsl::wt_huff<sdsl::csa_wt<sdsl::wt_huff<>>> compressed(bv);
+
+        return compressed;
+}
+
+sdsl::wm_int<sdsl::sd_vector<>> compress_wm_int() {
+        // Representar 'registers' como una secuencia de bits
+        sdsl::sd_vector<> bv(M, 0);
+        for (int i = 0; i < M; ++i) {
+            bv[i] = (registers[i] != 0);
+        }
+
+        // Crear estructuras de datos de sdsl-lite
+        sdsl::wm_int<sdsl::sd_vector<>> compressed(bv);
+
+        return compressed;
+}
+
+*/
