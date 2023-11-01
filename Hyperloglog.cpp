@@ -1,5 +1,5 @@
 #include "Hyperloglog.h"
-#include "MurmurHash3.h"
+#include "hash_functions/MurmurHash3.h"
 
 
 HyperLogLog::HyperLogLog(int precision) {
@@ -15,6 +15,7 @@ HyperLogLog::HyperLogLog(int precision) {
 void HyperLogLog::insert(const std::string& kmer) {
     uint32_t hash;
     MurmurHash3_x86_32(kmer.c_str(), kmer.size(), 0, &hash);
+    hash %= M;
     unsigned int p = hash >> (32 - precision);
     unsigned int b = hash << precision;
    
@@ -55,9 +56,9 @@ void HyperLogLog::merge(const HyperLogLog& other) {
     }
 }
 
-/*
 
-sdsl::wt_huff<sdsl::csa_wt<sdsl::wt_huff<>>> compress_wt_huff() {
+/*
+sdsl::wt_huff<sdsl::csa_wt<sdsl::wt_huff<>>> HyperLogLog::compress_wt_huff() {
         // Representar 'registers' como una cadena de bits
         sdsl::bit_vector bv(M, 0);
         for (int i = 0; i < M; ++i) {
@@ -70,7 +71,7 @@ sdsl::wt_huff<sdsl::csa_wt<sdsl::wt_huff<>>> compress_wt_huff() {
         return compressed;
 }
 
-sdsl::wm_int<sdsl::sd_vector<>> compress_wm_int() {
+sdsl::wm_int<sdsl::sd_vector<>> HyperLogLog::compress_wm_int() {
         // Representar 'registers' como una secuencia de bits
         sdsl::sd_vector<> bv(M, 0);
         for (int i = 0; i < M; ++i) {
@@ -81,6 +82,5 @@ sdsl::wm_int<sdsl::sd_vector<>> compress_wm_int() {
         sdsl::wm_int<sdsl::sd_vector<>> compressed(bv);
 
         return compressed;
-}
+}*/
 
-*/
