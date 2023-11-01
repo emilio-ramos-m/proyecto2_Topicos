@@ -2,6 +2,21 @@
 #include "CountMin_CU.h"
 #include <fstream> 
 
+std::vector<std::string> generarKmers(std::string line, int k){
+    std::vector<std::string> kmers;
+    std::string kmer_aux;
+    int i = 0;
+    while(i < line.size()){
+        if(i+k <= line.size()){
+            kmer_aux = line.substr(i, k);
+            kmers.push_back(kmer_aux);
+            i++;
+        }else{
+            break;
+        }
+    }
+    return kmers;
+}
 
 int main(){
     HyperLogLog hll;
@@ -15,12 +30,16 @@ int main(){
         return 0;
     }
 
-    // Elimina la primera línea
+    // Inserta k-mers en el HyperLogLog
     std::string line;
-    std::getline(inputFile, line);
-    // Inserta el k-mer en el HyperLogLog
-    while (std::getline(inputFile, line)) { 
-        hll.insert(line);
+    while (std::getline(inputFile, line)) {
+        if(line[0]=='>') {
+            continue;
+        } 
+        std::vector<std::string> kmers = generarKmers(line, 5);
+        for(int i = 0; i < kmers.size(); i++){
+            hll.insert(kmers[i]);
+        }
     }
     
     // Cierra el archivo

@@ -3,7 +3,7 @@
 
 
 HyperLogLog::HyperLogLog(int precision) {
-    precision = precision;
+    this->precision = precision;
     M = pow(2, precision);
     if (M == 16) alpha = 0.673;
     else if (M == 32) alpha = 0.697;
@@ -15,7 +15,7 @@ HyperLogLog::HyperLogLog(int precision) {
 void HyperLogLog::insert(const std::string& kmer) {
     uint32_t hash;
     MurmurHash3_x86_32(kmer.c_str(), kmer.size(), 0, &hash);
-    hash %= M;
+    //hash %= M;
     unsigned int p = hash >> (32 - precision);
     unsigned int b = hash << precision;
    
@@ -56,8 +56,19 @@ void HyperLogLog::merge(const HyperLogLog& other) {
     }
 }
 
-
 /*
+
+sdsl::wm_int<sdsl::rrr_vector<15>> HyperLogLog::compress_wm_int() {
+        // Representar 'registers' como una secuencia de enteros
+        sdsl::int_vector<> iv(registers.begin(), registers.end());
+
+        // Crear estructuras de datos de sdsl-lite
+        sdsl::wm_int<sdsl::rrr_vector<15>> compressed(iv);
+
+        return compressed;
+}
+
+
 sdsl::wt_huff<sdsl::csa_wt<sdsl::wt_huff<>>> HyperLogLog::compress_wt_huff() {
         // Representar 'registers' como una cadena de bits
         sdsl::bit_vector bv(M, 0);
