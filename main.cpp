@@ -35,8 +35,9 @@ int main(){
     while (std::getline(inputFile, line)) {
         if(line[0]=='>') {
             continue;
-        } 
-        std::vector<std::string> kmers = generarKmers(line, 5);
+        }
+        // Extrae e inserta los k-mers de la línea 
+        std::vector<std::string> kmers = generarKmers(line, 4);
         for(int i = 0; i < kmers.size(); i++){
             hll.insert(kmers[i]);
         }
@@ -48,6 +49,9 @@ int main(){
     // Calcula la cardinalidad estimada
     double estimate = hll.estimateCardinality();
     std::cout << "Cardinalidad estimada: " << estimate << std::endl;
+    std::cout<<"Bytes HLL: "<<hll.sizeInBytes()<<std::endl;
+    std::cout<<"Bytes HLL comprimido en wm_int: "<<hll.compress_wm_int()<<std::endl;
+    std::cout<<"Bytes HLL comprimido en wt_huff: "<<hll.compress_wt_huff()<<std::endl;
 
     return 0;
 }

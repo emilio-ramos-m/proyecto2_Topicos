@@ -6,6 +6,9 @@
 #include <vector>
 #include <algorithm>
 
+#include <sdsl/wm_int.hpp>
+#include <sdsl/csa_wt.hpp>
+#include <sdsl/wt_huff.hpp>
 
 
 class HyperLogLog {
@@ -13,16 +16,16 @@ private:
     int precision;
     int M;
     double alpha;
-    std::vector<int> registers;
+    std::vector<uint8_t> registers;
 
 public:
     HyperLogLog(int precision = 14);
     void insert(const std::string& kmer);
     double estimateCardinality();
-    void merge(const HyperLogLog& other);
-    //sdsl::wt_huff<sdsl::csa_wt<sdsl::wt_huff<>>> compress_wt_huff();
-    //sdsl::wm_int<sdsl::sd_vector<>> compress_wm_int();
-    //sdsl::wm_int<sdsl::rrr_vector<15>> HyperLogLog::compress_wm_int();
+    void Union(const HyperLogLog& other);
+    size_t sizeInBytes();
+    uint32_t compress_wm_int();
+    uint32_t compress_wt_huff();
 };
 
 #endif

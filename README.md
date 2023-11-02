@@ -16,5 +16,5 @@ sudo ./install.sh /usr/local/
 
 ### Compilación y Ejecución:
 ```
-g++ *.cpp hash_functions/*.cpp && ./a.out
+g++ -std=c++11 *.cpp hash_functions/*.cpp  -O3 -DNDEBUG -I ~/include -L ~/lib -lsdsl -ldivsufsort -ldivsufsort64 && ./a.out
 ```
