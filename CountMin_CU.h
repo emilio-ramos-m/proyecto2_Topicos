@@ -6,6 +6,9 @@
 #include <functional>
 #include <limits.h>
 
+#include <sdsl/wm_int.hpp>
+#include <sdsl/csa_wt.hpp>
+#include <sdsl/wt_huff.hpp>
 
 class CountMinCU {
 private:
@@ -17,8 +20,9 @@ public:
     CountMinCU(int width, int depth);
     void insert(uint32_t element, int delta = 1);
     int estimate(uint32_t element);
-    //sdsl::wt_huff<sdsl::sd_vector<>> compress_wt_huff();
-    //sdsl::wm_int<sdsl::sd_vector<>> compress_wm_int();
+    size_t sizeInBytes();
+    sdsl::wm_int<sdsl::rrr_vector<15>> compress_wm_int();
+    //sdsl::wt_huff<sdsl::rrr_vector<15>> compress_wt_huff();
 };
 
 #endif

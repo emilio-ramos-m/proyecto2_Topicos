@@ -24,8 +24,8 @@ public:
     double estimateCardinality();
     void Union(const HyperLogLog& other);
     size_t sizeInBytes();
-    uint32_t compress_wm_int();
-    uint32_t compress_wt_huff();
+    sdsl::wm_int<sdsl::rrr_vector<15>> compress_wm_int();
+    sdsl::wt_huff<sdsl::rrr_vector<15>> compress_wt_huff();
 };
 
 #endif

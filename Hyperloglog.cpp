@@ -62,16 +62,16 @@ size_t HyperLogLog::sizeInBytes() {
     return registers.size() * sizeof(uint8_t);
 }
 
-uint32_t HyperLogLog::compress_wm_int() {
+sdsl::wm_int<sdsl::rrr_vector<15>> HyperLogLog::compress_wm_int() {
     sdsl::wm_int<sdsl::rrr_vector<15>> wm_int;
     sdsl::construct_im(wm_int, registers, 1);
-    const uint32_t bitSize = sdsl::size_in_bytes(wm_int);
-    return bitSize;
+    //const uint32_t byteSize = sdsl::size_in_bytes(wm_int);
+    return wm_int;
 }
 
-uint32_t HyperLogLog::compress_wt_huff() {
+sdsl::wt_huff<sdsl::rrr_vector<15>> HyperLogLog::compress_wt_huff() {
     sdsl::wt_huff<sdsl::rrr_vector<15>> wt_huff;
     sdsl::construct_im(wt_huff, registers, 1);
-    const uint32_t bitSize = sdsl::size_in_bytes(wt_huff);
-    return bitSize;
+    //const uint32_t byteSize = sdsl::size_in_bytes(wt_huff);
+    return wt_huff;
 } 

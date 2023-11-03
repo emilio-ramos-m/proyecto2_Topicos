@@ -29,36 +29,31 @@ int CountMinCU::estimate(uint32_t element) {
     return min_count;
 }
 
+size_t CountMinCU::sizeInBytes() {
+    return sizeof(int) * num_hashes * table_size;
+}
+
+sdsl::wm_int<sdsl::rrr_vector<15>> CountMinCU::compress_wm_int(){
+    sdsl::int_vector<> sketch_int(num_hashes*table_size);
+    for(int i=0;i<num_hashes;i++){
+       for(int j=0;j<table_size;j++){
+           sketch_int[i*table_size+j]=sketch[i][j];
+       }
+    }
+    sdsl::wm_int<sdsl::rrr_vector<15>> wm_int;
+    sdsl::construct_im(wm_int, sketch_int, 4);
+    return wm_int;
+}
 /*
-
-sdsl::wt_huff<sdsl::sd_vector<>> compress_wt_huff() {
-        // Representar 'sketch' como una secuencia de bits
-        sdsl::bit_vector bv(num_hashes * table_size, 0);
-        for (int i = 0; i < num_hashes; ++i) {
-            for (int j = 0; j < table_size; ++j) {
-                bv[i * table_size + j] = (sketch[i][j] != 0);
-            }
-        }
-
-        // Crear estructuras de datos de sdsl-lite
-        sdsl::wt_huff<sdsl::sd_vector<>> compressed(bv);
-
-        return compressed;
+sdsl::wt_huff<sdsl::rrr_vector<15>> CountMinCU::compress_wt_huff(){
+    sdsl::int_vector<> sketch_int(num_hashes*table_size);
+    for(int i=0;i<num_hashes;i++){
+       for(int j=0;j<table_size;j++){
+           sketch_int[i*table_size+j]=sketch[i][j];
+       }
+    }
+    sdsl::wt_huff<sdsl::rrr_vector<15>> wt_huff;
+    sdsl::construct_im(wt_huff, sketch_int, 4);
+    return wt_huff;
 }
-
-sdsl::wm_int<sdsl::sd_vector<>> compress_wm_int() {
-        // Representar 'sketch' como una secuencia de bits
-        sdsl::bit_vector bv(num_hashes * table_size, 0);
-        for (int i = 0; i < num_hashes; ++i) {
-            for (int j = 0; j < table_size; ++j) {
-                bv[i * table_size + j] = (sketch[i][j] != 0);
-            }
-        }
-
-        // Crear estructuras de datos de sdsl-lite
-        sdsl::wm_int<sdsl::sd_vector<>> compressed(bv);
-
-        return compressed;
-}
-
 */
