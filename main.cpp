@@ -82,6 +82,15 @@ int main(int argc, char* argv[]){
         cout<<"Tamaño de compresion wm_int "<<size_in_bytes(CMCU_wm_int)<<" bytes"<<endl;
         cout<<"Razon de compresion wm_int "<<size_in_bytes(CMCU_wm_int)/(double)countMinCu.sizeInBytes()<<" bytes"<<endl;
         cout<<endl;
+
+        //for (auto it = frec.begin(); it != frec.end(); ++it) {
+            //int estimacion_compress = countMinCu.estimate_compress(it->first,CMCU_wm_int);
+            //cout << estimacion_compress << " " << it->second << endl;
+        //}
+        for(int i=0;i<CMCU_wm_int.size();++i){
+            cout<<CMCU_wm_int[i]<<" ";
+        }
+        cout<<endl;
         /*
         wt_huff<rrr_vector<15>> CMCU_wt_huff = countMinCu.compress_wt_huff();
         cout<<"Tamaño de compresion wt_huff "<<size_in_bytes(CMCU_wt_huff)<<" bytes"<<endl;
@@ -94,7 +103,6 @@ int main(int argc, char* argv[]){
 
     return 0;
 }
-
 
     vector<string> generarKmers(string line, int k){
         vector<string> kmers;

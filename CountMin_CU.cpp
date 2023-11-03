@@ -29,6 +29,15 @@ int CountMinCU::estimate(uint32_t element) {
     return min_count;
 }
 
+int CountMinCU::estimate_compress(uint32_t element, sdsl::wm_int<sdsl::rrr_vector<15>> CMCU_wm_int){
+    int min_count = INT_MAX;
+    Hashes hashes;
+    for (int i=0 ; i<num_hashes; i++) {
+        min_count = min(min_count, (int)CMCU_wm_int[hashes.hash(element, i,table_size) + num_hashes*i]);
+    }
+    return min_count;
+}
+
 size_t CountMinCU::sizeInBytes() {
     return sizeof(int) * num_hashes * table_size;
 }
