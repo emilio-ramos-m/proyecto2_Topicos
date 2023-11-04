@@ -2,6 +2,7 @@
 #include "hash_functions/MurmurHash3.h"
 
 
+
 HyperLogLog::HyperLogLog(int precision) {
     this->precision = precision;
     M = pow(2, precision);
@@ -11,13 +12,12 @@ HyperLogLog::HyperLogLog(int precision) {
         case 64: alpha = 0.709; break;
         default: alpha = 0.7213 / (1 + 1.079 / M); break;
     }
-    registers = std::vector<uint8_t>(M, 0);
+    registers = vector<uint8_t>(M, 0);
 }
 
-void HyperLogLog::insert(const std::string& kmer) {
+void HyperLogLog::insert(const string& kmer) {
     uint32_t hash;
     MurmurHash3_x86_32(kmer.c_str(), kmer.size(), 0, &hash);
-    //hash %= M;
     unsigned int p = hash >> (32 - precision);
     unsigned int b = hash << precision;
    
@@ -27,7 +27,7 @@ void HyperLogLog::insert(const std::string& kmer) {
         w++;
         aux >>= 1;
     }
-    registers[p] = std::max(registers[p], static_cast<uint8_t>(w));
+    registers[p] = max(registers[p], static_cast<uint8_t>(w));
 }
 
 double HyperLogLog::estimateCardinality() {
@@ -39,7 +39,7 @@ double HyperLogLog::estimateCardinality() {
     double estimate = alpha * M * M / sum;
 
     if (estimate <= 5.0 / 2.0 * M) {
-        int zeroRegisters = std::count(registers.begin(), registers.end(), 0);
+        int zeroRegisters = count(registers.begin(), registers.end(), 0);
         if (zeroRegisters != 0) {
             // Corrección de pequeños valores
             estimate = M * log(static_cast<double>(M) / zeroRegisters);
@@ -54,24 +54,45 @@ double HyperLogLog::estimateCardinality() {
 
 void HyperLogLog::Union(const HyperLogLog& other) {
     for (int i = 0; i < M; i++) {
-        registers[i] = std::max(registers[i], other.registers[i]);
+        registers[i] = max(registers[i], other.registers[i]);
     }
 }
+
+void HyperLogLog::Union_wm_int(wm_int<rrr_vector<15>> hll1, wm_int<rrr_vector<15>> hll2) {
+    if(hll1.size() != hll2.size()){
+        cout<<"Los tamaños de los hll no son iguales"<<endl;
+        exit(0);
+    }
+    int correcion = 8;
+    for(int i = 0; i < registers.size(); i++){
+        registers[i] = max(hll1[i+correcion], hll2[i+correcion]);
+    }
+}
+
+void HyperLogLog::Union_wt_huff(wt_huff<rrr_vector<15>> hll1, wt_huff<rrr_vector<15>> hll2) {
+    if(hll1.size() != hll2.size()){
+        cout<<"Los tamaños de los hll no son iguales"<<endl;
+        exit(0);
+    }
+    int correcion = 8;
+    for(int i = 0; i < registers.size(); i++){
+        registers[i] = max(hll1[i+correcion], hll2[i+correcion]);
+    }
+}
+
+wm_int<rrr_vector<15>> HyperLogLog::compress_wm_int() {
+    wm_int<rrr_vector<15>> wm_int;
+    construct_im(wm_int, registers, 1);
+    return wm_int;
+}
+
+wt_huff<rrr_vector<15>> HyperLogLog::compress_wt_huff() {
+    wt_huff<rrr_vector<15>> wt_huff;
+    construct_im(wt_huff, registers, 1);
+    return wt_huff;
+} 
 
 size_t HyperLogLog::sizeInBytes() {
     return registers.size() * sizeof(uint8_t);
 }
 
-sdsl::wm_int<sdsl::rrr_vector<15>> HyperLogLog::compress_wm_int() {
-    sdsl::wm_int<sdsl::rrr_vector<15>> wm_int;
-    sdsl::construct_im(wm_int, registers, 1);
-    //const uint32_t byteSize = sdsl::size_in_bytes(wm_int);
-    return wm_int;
-}
-
-sdsl::wt_huff<sdsl::rrr_vector<15>> HyperLogLog::compress_wt_huff() {
-    sdsl::wt_huff<sdsl::rrr_vector<15>> wt_huff;
-    sdsl::construct_im(wt_huff, registers, 1);
-    //const uint32_t byteSize = sdsl::size_in_bytes(wt_huff);
-    return wt_huff;
-} 
