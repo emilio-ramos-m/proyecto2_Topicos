@@ -18,9 +18,9 @@ int main(){
     
     // Cargar los archivos
     cout<<"Cargando genoma 1..."<<endl;
-    vector<string> file1 = loadFile("GCF_000717965.1_ASM71796v1_genomic.fna");
+    vector<string> file1 = loadFile("data/GCF_000717965.1_ASM71796v1_genomic.fna");
     cout<<"Cargando genoma 2..."<<endl;
-    vector<string> file2 = loadFile("GCF_001182945.1_P44_Wales_1_VIM_2_11_12_genomic.fna");
+    vector<string> file2 = loadFile("data/GCF_001182945.1_P44_Wales_1_VIM_2_11_12_genomic.fna");
     
     cout<<"Insertando k-mers..." <<endl;
     insertKmer(&hll1,file1,10);
@@ -111,7 +111,7 @@ int main(){
     
     // Cargar el archivo
     cout<<"Cargando dataset..."<<endl;
-    vector<string> file = loadFile("Chicago-20080319.txt");
+    vector<string> file = loadFile("data/Chicago-20080319.txt");
     // Insertar los datos
     cout<<"Insertando datos..."<<endl;
     uint32_t num;

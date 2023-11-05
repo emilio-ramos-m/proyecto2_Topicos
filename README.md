@@ -6,7 +6,7 @@
 ## Descripción:
 
 ### Bibliotecas utilizadas:
-- **sdsl-lite:** Para la comprimir los sketches.
+- **sdsl-lite:** Para la comprimir los sketches con las estructuras wm_int y wt_huff.
 #### Instalación:
 ```
 git clone https://github.com/simongog/sdsl-lite.git
