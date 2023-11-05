@@ -6,23 +6,23 @@ using namespace std;
 using namespace sdsl;
 using namespace chrono;
 
-void insertKmer(HyperLogLog *h, vector<string> v,int k);
+void insertKmer(HyperLogLog *h, vector<string> file,int k);
 vector<string> loadFile(string filename);
 
 
 int main(){ 
-    cout<<"### Evaluacion Experimental ###\n"<<endl;
+    cout<<"\n### Evaluacion Experimental ###\n"<<endl;
 
     cout<<"## HyperLogLog ##"<<endl;
     HyperLogLog hll1,hll2;
     
     // Cargar los archivos
-    cout<<"Cargando genoma 1 ..."<<endl;
+    cout<<"Cargando genoma 1..."<<endl;
     vector<string> file1 = loadFile("GCF_000717965.1_ASM71796v1_genomic.fna");
-    cout<<"Cargando genoma 2 ..."<<endl;
+    cout<<"Cargando genoma 2..."<<endl;
     vector<string> file2 = loadFile("GCF_001182945.1_P44_Wales_1_VIM_2_11_12_genomic.fna");
     
-    cout<<"Insertando k-mers ..." <<endl;
+    cout<<"Insertando k-mers..." <<endl;
     insertKmer(&hll1,file1,10);
     insertKmer(&hll2,file2,10);
     cout<<endl;
@@ -102,7 +102,7 @@ int main(){
     cout<<"Union HLL1-HLL2 con wm_int: "<<time_Union_wm_int/n<<" ns"<<endl;
     cout<<"Union HLL1-HLL2 con wt_huff: "<<time_Union_wt_huff/n<<" ns"<<endl;
     cout<<endl;
-
+    cout<<endl;
 
     // CountMinCU
     cout<<"## CountMinCU ##"<<endl;
@@ -174,12 +174,12 @@ int main(){
     return 0;
 }
 
-void insertKmer(HyperLogLog *h, vector<string> v,int k){
+void insertKmer(HyperLogLog *h, vector<string> file,int k){
     string kmer;
-    for(int i = 0; i < v.size(); i++){
-        if(v[i].size() < k) continue; 
-        for(int j = 0; j < v[i].size()-k+1; j++){
-            kmer = v[i].substr(j,k);
+    for(int i = 0; i < file.size(); i++){
+        if(file[i].size() < k) continue; 
+        for(int j = 0; j < file[i].size()-k+1; j++){
+            kmer = file[i].substr(j,k);
             h->insert(kmer);
         }
     }
