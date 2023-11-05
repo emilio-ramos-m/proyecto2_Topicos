@@ -23,9 +23,9 @@ private:
 
 public:
     HyperLogLog(int precision = 14);
-    void insert(const std::string& kmer);
+    void insert(string kmer);
     double estimateCardinality();
-    void Union(const HyperLogLog& other);
+    void Union(HyperLogLog other);
     void Union_wm_int(wm_int<rrr_vector<15>> hll1, wm_int<rrr_vector<15>> hll2);
     void Union_wt_huff(wt_huff<rrr_vector<15>> hll1, wt_huff<rrr_vector<15>> hll2);
     wm_int<rrr_vector<15>> compress_wm_int();

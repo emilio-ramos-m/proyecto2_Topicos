@@ -15,26 +15,26 @@ HyperLogLog::HyperLogLog(int precision) {
     registers = vector<uint8_t>(M, 0);
 }
 
-void HyperLogLog::insert(const string& kmer) {
+void HyperLogLog::insert(string kmer) {
     uint32_t hash;
-    MurmurHash3_x86_32(kmer.c_str(), kmer.size(), 0, &hash);
-    unsigned int p = hash >> (32 - precision);
+    MurmurHash3_x86_32(kmer.c_str(), kmer.size(), 1, &hash);
+    unsigned int p = hash >> 32 - precision;
     unsigned int b = hash << precision;
    
-    int w = 1;
-    int aux = 1 << precision;
+    uint8_t w = 1;
+    unsigned int aux = 1 << 31;
     while ((b & aux) == 0 && aux != 0) {
         w++;
-        aux >>= 1;
+        aux = aux >> 1;
     }
-    registers[p] = max(registers[p], static_cast<uint8_t>(w));
+    registers[p] = max(registers[p], w);
 }
 
 double HyperLogLog::estimateCardinality() {
     // Computar el estimador
     double sum = 0;
     for (int i = 0; i < M; i++) {
-        sum += pow(2, -registers[i]);
+        sum += 1/pow(2, registers[i]);
     }
     double estimate = alpha * M * M / sum;
 
@@ -52,7 +52,7 @@ double HyperLogLog::estimateCardinality() {
     return estimate;
 }
 
-void HyperLogLog::Union(const HyperLogLog& other) {
+void HyperLogLog::Union(HyperLogLog other) {
     for (int i = 0; i < M; i++) {
         registers[i] = max(registers[i], other.registers[i]);
     }
